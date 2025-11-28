@@ -1,0 +1,141 @@
+version: '3.8'
+
+services:
+
+  eureka:
+    build:
+      context: ./edufy-eureka-server
+      dockerfile: Dockerfile
+      no_cache: true
+    container_name: edufy-eureka-container
+    ports:
+      - "8761:8761"
+    networks:
+      - edufy-network
+
+  gateway:
+    build:
+      context: ./edufy-microservice-gateway
+      dockerfile: Dockerfile
+      no_cache: true
+    container_name: edufy-gateway-container
+    ports:
+      - "8081:8081"
+    depends_on:
+      - eureka
+    networks:
+      - edufy-network
+
+  mysqldb:
+    image: mysql:8.0
+    container_name: edufy-mysql-service
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: edufydb
+      MYSQL_USER: edufy-user
+      MYSQL_PASSWORD: root
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - edufy-network
+
+  keycloakdb:
+    image: mysql:8.0
+    container_name: edufy-keycloak-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: keycloakdb
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    ports:
+      - 3307:3306
+    volumes:
+      - mysql-keycloak_data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - edufy-network
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:24.0.3
+    container_name: edufy-keycloak-container
+    command: start-dev
+    environment:
+      KC_DB: mysql
+      KC_DB_URL: jdbc:mysql://keycloakdb:3306/keycloakdb
+      KC_DB_USERNAME: admin
+      KC_DB_PASSWORD: admin
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8080:8080"
+    depends_on:
+      - keycloakdb
+    networks:
+      - edufy-network
+
+  edufy-mediaplayer-service:
+    build:
+      context: ./edufy-mediaplayer-service
+      dockerfile: Dockerfile
+      no_cache: true
+    container_name: edufy-mediaplayer-service-container
+    ports:
+      - "9091:9091"
+    depends_on:
+      - eureka
+      - mysqldb
+    networks:
+      - edufy-network
+
+  edufy-user-service:
+    build:
+      context: ./Edufy-userservice
+      dockerfile: Dockerfile
+      no_cache: true
+    container_name: edufy-userservice-container
+    ports:
+      - "9093:9093"
+    depends_on:
+      - eureka
+      - mysqldb
+    networks:
+      - edufy-network
+
+  edufy-recommendation-service:
+    build:
+      context: ./edufy-recommendation-service
+      dockerfile: Dockerfile
+      no_cache: true
+    container_name: edufy-recommendation-service-container
+    ports:
+      - "9092:9092"
+    depends_on:
+      - eureka
+      - mysqldb
+    networks:
+      - edufy-network
+
+  edufy-toplist-service:
+    build:
+      context: ./Edufy-toplistservice
+      dockerfile: Dockerfile
+      no_cache: true
+    container_name: edufy-toplist-service-container
+    ports:
+      - "9094:9094"
+    depends_on:
+      - eureka
+      - mysqldb
+    networks:
+      - edufy-network
+
+volumes:
+  mysql_data:
+  mysql-keycloak_data:
+networks:
+  edufy-network:

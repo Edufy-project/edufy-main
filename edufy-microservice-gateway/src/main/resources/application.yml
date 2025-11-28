@@ -1,0 +1,45 @@
+server:
+  port: 8081 #gateway port
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://edufy-eureka-container:8761/eureka/ #located by eureka docker container name
+
+spring:
+  application:
+    name: edufy-gateway
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://edufy-keycloak-container:8080/realms/edufy-realm
+  cloud:
+    gateway:
+      server:
+        webflux:
+          routes:
+            - id: toplist
+              uri: lb://Edufy-toplistservice
+              predicates:
+                - Path=/edufy/api/toplist/**
+              filters:
+                - TokenRelay=
+            - id: userservice
+              uri: lb://userservice
+              predicates:
+                - Path=/edufy/api/users/**
+              filters:
+                - TokenRelay=
+            - id: recommended
+              uri: lb://edufy-recommendation-service
+              predicates:
+                - Path=/edufy/api/recommended/**
+              filters:
+                - TokenRelay=
+            - id: mediaplayer
+              uri: lb://edufy-mediaplayer-service
+              predicates:
+                - Path=/edufy/api/mediaplayer/**
+              filters:
+                - TokenRelay=
