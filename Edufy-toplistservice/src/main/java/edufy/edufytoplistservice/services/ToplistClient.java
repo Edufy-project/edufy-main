@@ -20,8 +20,8 @@ public class ToplistClient {
     private RestClient mediaServiceClient;
 
     public ToplistClient(RestClient.Builder restClientBuilder,
-                            @Value("http://localhost:9093") String userServiceUrl,
-                            @Value("http://localhost:9091") String mediaServiceUrl) {
+                            @Value("http://edufy-userservice-container:9093") String userServiceUrl,
+                            @Value("http://edufy-mediaplayer-service-container:9091") String mediaServiceUrl) {
         this.userServiceClient = restClientBuilder
                 .baseUrl(userServiceUrl)
                 .build();
