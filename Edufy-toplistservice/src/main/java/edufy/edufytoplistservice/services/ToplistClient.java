@@ -31,7 +31,6 @@ public class ToplistClient {
                 .build();
     }
 
-    // Hämtar alla mediaobjekt från MediaPlayer API
     public List<MediaDTO> fetchAllMedia(String token) {
         List<MediaDTO> allMedia = new ArrayList<>();
         try {
