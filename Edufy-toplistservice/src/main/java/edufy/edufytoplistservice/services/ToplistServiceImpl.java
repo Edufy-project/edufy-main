@@ -17,9 +17,6 @@ public class ToplistServiceImpl implements ToplistService {
     public ToplistServiceImpl(ToplistClient restClient) {
         this.restClient = restClient;}
 
-
-    // Gemensam metod för att generera topp 10 lista
-    // 🔥 Genererar global topp 10 – utan user filter
     private List<ToplistDTO> generateToplist(List<MediaDTO> mediaList) {
 
         long totalPlays = mediaList.stream()
@@ -42,7 +39,6 @@ public class ToplistServiceImpl implements ToplistService {
                 .collect(Collectors.toList());
     }
 
-    // Intern helper för användartopplista med optional typfilter
     private List<ToplistDTO> generateUserToplist(Long userId, String type, String token) {
         List<MediaReference> userHistory = restClient.fetchUserMediaHistory(userId, token);
         List<MediaDTO> allMedia = restClient.fetchAllMedia(token);
@@ -50,9 +46,8 @@ public class ToplistServiceImpl implements ToplistService {
         if (userHistory == null) {
             throw new ResourceNotFoundException("User", "userId", userId);
         }
-
         if (userHistory.isEmpty()) {
-            return List.of(); // Historiken är tom
+            return List.of();
         }
 
         List<MediaDTO> userMedia = userHistory.stream()
@@ -66,7 +61,7 @@ public class ToplistServiceImpl implements ToplistService {
                         .toList();
 
         if (userMedia.isEmpty()) {
-            return List.of(); // Ingen media i historiken hittades
+            return List.of();
         }
         long totalPlays = userMedia.stream()
                 .mapToLong(MediaDTO::getPlayCount)
@@ -90,13 +85,11 @@ public class ToplistServiceImpl implements ToplistService {
 
     @Override
     public List<ToplistDTO> getTopPlayedMedia(String token) {
-        return generateToplist(restClient.fetchAllMedia(token));
-
-//        List<MediaDTO> allMedia = restClient.fetchAllMedia(token);
-//        if (allMedia.isEmpty()) {
-//            throw new ResourceNotFoundException("Media", "all", "No media found");
-//        }
-//        return generateToplist(allMedia, null);
+        List<MediaDTO> allMedia = restClient.fetchAllMedia(token);
+        if (allMedia.isEmpty()) {
+            throw new ResourceNotFoundException("Mediaplayer toplist", "Media", "No media found in system");
+        }
+        return generateToplist(allMedia);
     }
 
     @Override
@@ -104,15 +97,10 @@ public class ToplistServiceImpl implements ToplistService {
         List<MediaDTO> filtered = restClient.fetchAllMedia(token).stream()
                 .filter(m -> m.getType().equalsIgnoreCase(type))
                 .toList();
+        if (filtered.isEmpty()) {
+            throw new ResourceNotFoundException("Media", "type", type);
+        }
         return generateToplist(filtered);
-//        List<MediaDTO> filteredMedia = restClient.fetchAllMedia(token).stream()
-//                .filter(m -> m.getType() != null && m.getType().equalsIgnoreCase(type))
-//                .toList();
-//
-//        if (filteredMedia.isEmpty()) {
-//            throw new ResourceNotFoundException("Media", "type", type);
-//        }
-//        return generateToplist(filteredMedia, null);
     }
 
     @Override

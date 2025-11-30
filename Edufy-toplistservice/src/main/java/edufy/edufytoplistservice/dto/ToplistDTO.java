@@ -5,7 +5,7 @@ import java.util.List;
 
 public class ToplistDTO {
     private String title;
-    private String type; // MUSIC, POD, VIDEO
+    private String type;
     private String artist;
     private String albumTitle;
     private String genre;
