@@ -17,11 +17,9 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    //private final PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository/*, PasswordEncoder passwordEncoder*/) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-        //this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -43,8 +41,6 @@ public class UserServiceImpl implements UserService {
         userRepository.findByUsername(user.getUsername()).ifPresent(c ->{
             throw new InvalidUserException("Username already exists");
         });
-
-        //user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
         return user;
     }
@@ -73,7 +69,6 @@ public class UserServiceImpl implements UserService {
         if (user.getPreferredGenres() == null || user.getPreferredGenres().trim().isEmpty()) {
             throw new InvalidUserException("Preferred genres cannot be empty");
         }
-        // Kontrollera om nytt användarnamn redan finns (och inte tillhör samma användare)
         userRepository.findByUsername(user.getUsername())
                 .filter(u -> !u.getId().equals(user.getId()))
                 .ifPresent(u -> {
@@ -82,14 +77,8 @@ public class UserServiceImpl implements UserService {
 
         existingUser.setUsername(user.getUsername());
         existingUser.setPreferredGenres(user.getPreferredGenres());
-        // Uppdatera lösenord om nytt skickas in
         if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
-            //existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
-//         Uppdatera roller (valfritt – beroende på säkerhetsnivå)
-//        if (user.getRoles() != null && !user.getRoles().trim().isEmpty()) {
-//            existingUser.setRoles(user.getRoles());
-//        }
         return userRepository.save(existingUser);
     }
 
@@ -117,7 +106,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void setUserMediaHistory(Long userId, List<MediaReference> mediaHistory) {
-
         if (mediaHistory == null){
             throw new IllegalArgumentException("Can not add null Object to User MediaHistory.");
         }
@@ -128,8 +116,7 @@ public class UserServiceImpl implements UserService {
     public void addMediaToUserMediaHistory(Long userId, String mediaType, Long mediaId) {
         if (userId == null || mediaType == null || mediaId == null){
             throw new IllegalArgumentException("Can not add to User MediaHistory with null in params.");
-        }
-        else {
+        } else {
             getUserOrThrow(userId).addToMediaHistory(mediaType, mediaId);
         }
     }
@@ -138,6 +125,4 @@ public class UserServiceImpl implements UserService {
     public List<MediaReference> getUserMediaHistory(Long userId) {
         return getUserOrThrow(userId).getMediaHistory();
     }
-
-
 }

@@ -46,7 +46,6 @@ public class ToplistServiceImpl implements ToplistService {
         if (userHistory == null) {
             throw new ResourceNotFoundException("User", "userId", userId);
         }
-
         if (userHistory.isEmpty()) {
             return List.of();
         }
@@ -86,13 +85,11 @@ public class ToplistServiceImpl implements ToplistService {
 
     @Override
     public List<ToplistDTO> getTopPlayedMedia(String token) {
-        return generateToplist(restClient.fetchAllMedia(token));
-
-//        List<MediaDTO> allMedia = restClient.fetchAllMedia(token);
-//        if (allMedia.isEmpty()) {
-//            throw new ResourceNotFoundException("MediaPlayer", "all", "No media found");
-//        }
-//        return generateToplist(allMedia, null);
+        List<MediaDTO> allMedia = restClient.fetchAllMedia(token);
+        if (allMedia.isEmpty()) {
+            throw new ResourceNotFoundException("Mediaplayer toplist", "Media", "No media found in system");
+        }
+        return generateToplist(allMedia);
     }
 
     @Override
@@ -100,15 +97,10 @@ public class ToplistServiceImpl implements ToplistService {
         List<MediaDTO> filtered = restClient.fetchAllMedia(token).stream()
                 .filter(m -> m.getType().equalsIgnoreCase(type))
                 .toList();
+        if (filtered.isEmpty()) {
+            throw new ResourceNotFoundException("Media", "type", type);
+        }
         return generateToplist(filtered);
-//        List<MediaDTO> filteredMedia = restClient.fetchAllMedia(token).stream()
-//                .filter(m -> m.getType() != null && m.getType().equalsIgnoreCase(type))
-//                .toList();
-//
-//        if (filteredMedia.isEmpty()) {
-//            throw new ResourceNotFoundException("MediaPlayer", "type", type);
-//        }
-//        return generateToplist(filteredMedia, null);
     }
 
     @Override

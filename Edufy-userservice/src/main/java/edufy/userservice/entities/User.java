@@ -17,7 +17,7 @@ public class User {
     private String username;
 
 @Column(nullable = false)
-    private String password; // kör en bcrypt för lösen(hashat)
+    private String password;
 
 @Column(nullable = false)
     private String preferredGenres;
@@ -30,7 +30,6 @@ private String roles = "USER";
 
 @ElementCollection
 private List<MediaReference> mediaHistory = new ArrayList<>();
-
 
     public User() {
     }
@@ -92,17 +91,14 @@ private List<MediaReference> mediaHistory = new ArrayList<>();
         this.roles = roles;
     }
 
-
     private final static int maxMediaHistoryArraySize = 100;
 
     public void setMediaHistory(List<MediaReference> mediaHistory){
         if (mediaHistory.size() > maxMediaHistoryArraySize){
             throw new IllegalArgumentException("Media History is not allowed to surpass the max length set within Edufy-userservice/User");
-        }
-        else {
+        } else {
             this.mediaHistory = mediaHistory;
         }
-
     }
 
     public void addToMediaHistory(String mediaType, Long mediaId){
@@ -116,5 +112,4 @@ private List<MediaReference> mediaHistory = new ArrayList<>();
     public List<MediaReference> getMediaHistory(){
         return this.mediaHistory;
     }
-
 }
