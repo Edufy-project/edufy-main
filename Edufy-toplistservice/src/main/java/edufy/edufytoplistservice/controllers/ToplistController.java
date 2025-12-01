@@ -2,7 +2,6 @@ package edufy.edufytoplistservice.controllers;
 
 import edufy.edufytoplistservice.dto.ToplistDTO;
 import edufy.edufytoplistservice.services.ToplistService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -1,7 +1,6 @@
 package edufy.edufytoplistservice.dto;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class ToplistDTO {
     private String title;
@@ -59,4 +58,3 @@ public class ToplistDTO {
         return totalPlayCount;
     }
 }
-

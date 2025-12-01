@@ -3,7 +3,6 @@ package edufy.edufytoplistservice.services;
 import edufy.edufytoplistservice.dto.MediaDTO;
 import edufy.edufytoplistservice.dto.MediaReference;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
@@ -11,7 +10,6 @@ import org.springframework.web.client.RestClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 
 @Component
 public class ToplistClient {
@@ -71,5 +69,4 @@ public class ToplistClient {
             return List.of();
         }
     }
-
 }
