@@ -2,13 +2,12 @@ package edufy.edufytoplistservice.dto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
 
 public class MediaDTO {
 
     private Long id;
     private String title;
-    private String type; //TODO "MUSIC", "POD", "VIDEO"
+    private String type;
     private LocalDate releaseDate;
     private String streamUrl;
     private Integer albumOrder;

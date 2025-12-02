@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class MediaMapper {
-
-    // Helper-metod för gemensamma fält
     private static MediaDTO mapCommonFields(Long id,String title, java.time.LocalDate releaseDate, String streamUrl,
                                             Integer albumOrder, java.time.LocalDateTime createdAt, String albumTitle,
                                             Artist artist, Genre genre, String type ) {
@@ -26,7 +24,6 @@ public class MediaMapper {
         return dto;
     }
 
-    // Music -> MediaDTO
     public static MediaDTO toMediaDTO(Music music) {
         return mapCommonFields(
                 music.getId(),
@@ -42,7 +39,6 @@ public class MediaMapper {
         );
     }
 
-    // Pod -> MediaDTO
     public static MediaDTO toMediaDTO(Pod pod) {
         return mapCommonFields(
                 pod.getId(),
@@ -58,7 +54,6 @@ public class MediaMapper {
         );
     }
 
-    // Video -> MediaDTO
     public static MediaDTO toMediaDTO(Video video) {
         return mapCommonFields(
                 video.getId(),
@@ -74,21 +69,18 @@ public class MediaMapper {
         );
     }
 
-    // List<Music> -> List<MediaDTO>
     public static List<MediaDTO> toMediaDTOListFromMusic(List<Music> musicList) {
         return musicList.stream()
                 .map(MediaMapper::toMediaDTO)
                 .collect(Collectors.toList());
     }
 
-    // List<Pod> -> List<MediaDTO>
     public static List<MediaDTO> toMediaDTOListFromPod(List<Pod> podList) {
         return podList.stream()
                 .map(MediaMapper::toMediaDTO)
                 .collect(Collectors.toList());
     }
 
-    // List<Video> -> List<MediaDTO>
     public static List<MediaDTO> toMediaDTOListFromVideo(List<Video> videoList) {
         return videoList.stream()
                 .map(MediaMapper::toMediaDTO)
