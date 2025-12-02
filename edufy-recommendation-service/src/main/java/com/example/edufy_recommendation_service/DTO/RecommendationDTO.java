@@ -1,7 +1,7 @@
 package com.example.edufy_recommendation_service.DTO;
 
+//Henrik
 public class RecommendationDTO {
-
     private Long id;
     private String genreName;
     private String title;

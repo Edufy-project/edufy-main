@@ -1,7 +1,7 @@
 package com.example.edufy_recommendation_service.DTO;
 
+//Christoffer
 public class MediaReferenceDTO {
-
     private String mediaType;
     private Long mediaId;
 

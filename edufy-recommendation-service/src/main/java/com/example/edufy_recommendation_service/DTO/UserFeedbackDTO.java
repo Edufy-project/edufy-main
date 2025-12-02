@@ -2,8 +2,8 @@ package com.example.edufy_recommendation_service.DTO;
 
 import java.time.LocalDateTime;
 
+//Simon
 public class UserFeedbackDTO {
-
     private Long id;
     private Long userId;
     private Long mediaId;

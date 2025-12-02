@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 
+//Henrik
 @Service
 public class RecommendService {
 
@@ -144,13 +145,7 @@ public class RecommendService {
 
         for (MediaReferenceDTO media : userHistory) {
             String genre = getMediaGenre(media.getMediaType(), media.getMediaId(), token);
-            int recommendWeight = 1;
-
-            if (isMediaLiked(media.getMediaId(), media.getMediaType(), userLikes)) {
-                recommendWeight = 3;
-            } else if (isMediaDisliked(media.getMediaId(), media.getMediaType(), userDislikes)) {
-                recommendWeight = -3;
-            }
+            int recommendWeight = calculateRecommendWeight(media, userLikes, userDislikes);
 
             if (recommendWeight > 0 && genre != null) {
                 frequencyMap.put(genre, frequencyMap.getOrDefault(genre, 0) + recommendWeight);
@@ -161,6 +156,18 @@ public class RecommendService {
                 .sorted((a, b) -> b.getValue().compareTo(a.getValue()))
                 .map(e -> e.getKey())
                 .toList();
+    }
+
+    public int calculateRecommendWeight(MediaReferenceDTO media, List<UserFeedbackDTO> userLikes, List<UserFeedbackDTO> userDislikes) {
+        int recommendWeight = 1;
+
+        if (isMediaLiked(media.getMediaId(), media.getMediaType(), userLikes)) {
+            recommendWeight = 3;
+        } else if (isMediaDisliked(media.getMediaId(), media.getMediaType(), userDislikes)) {
+            recommendWeight = -3;
+        }
+
+        return recommendWeight;
     }
 
     public String getMediaGenre(String mediaType, Long mediaId, String token) {

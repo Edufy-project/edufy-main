@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+//Henrik
 @RestController
 @RequestMapping("edufy/api/recommended/")
 public class RecommendController {
